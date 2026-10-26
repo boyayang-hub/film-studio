@@ -297,6 +297,8 @@ const SB = (() => {
             if (c < 0 && from > 0) c = txt.indexOf(p);
             if (c >= 0) { r = ln.t0 + (ln.t1 - ln.t0) * (c / Math.max(1, txt.length)) - 0.1; break; }
           }
+          // not found after the previous beat (the voice says it earlier): take its first mention anywhere in the scene
+          if (r == null) for (const ln of sc.lines) { const c = norm(ln.text).indexOf(p); if (c >= 0) { r = ln.t0 + (ln.t1 - ln.t0) * (c / Math.max(1, ln.text.length)) - 0.1; break; } }
           if (r == null) warnings.push(`${where}: "at": "${spec}" is not in this scene's voice text, so it was timed automatically.`);
         }
         if (r == null) r = count > 1 ? lerp0(vStart + 0.3, Math.max(vStart + 0.3, vEnd - 1.0), k / (count - 1)) : vStart + 0.3;
